@@ -57,14 +57,19 @@ const signUp = async (req, res) => {
         // creates user
         const hashedPassword = bcrypt.hashSync(req.body.password, 10)
 
-        const uploadedImage = await uploadImage(req.file.buffer)
+        let profilePicUrl = ''
 
+        if (req.file) {
+            const uploadedImage = await uploadImage(req.file.buffer)
+            profilePicUrl = uploadImage.secure_url
+        }
+        
         const userData = {
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
             bio: req.body.bio,
-            profilePic: uploadedImage.secure_url,
+            profilePic: profilePicUrl,
         }
 
         const user = await User.create(userData)
