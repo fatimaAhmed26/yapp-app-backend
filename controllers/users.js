@@ -34,8 +34,41 @@ const update = async (req, res) => {
     }
 }
 
+const followToggle = async (req, res) => {
+    try {
+        const currentUser = await User.findById(req.user._id)
+        const targetUser = await User.findById(req.params.userId)
+
+        if (!targetUser) {
+            return res.status(404).json({err: 'User not found.'})
+        }
+        if (req.params.userId === req.user._id) {
+            return res.status(400).json({err: 'You cant follow youself.'})
+        }
+
+        const isFollowing = currentUser.following.includes(req.params.userId)
+
+        if (isFollowing) {
+            currentUser.following.pull(req.params.userId)
+            targetUser.followers.pull(req.user._id)
+        } else {
+            currentUser.following.push(req.params.userId)
+            targetUser.followers.push(req.user._id)
+        }
+
+        await currentUser.save()
+        await targetUser.save()
+
+        res.json(currentUser)
+        
+    } catch (err) {
+        res.status(400).json({err: err.message})
+    }
+}
+
 module.exports = {
     index,
     show,
     update,
+    followToggle,
 }
