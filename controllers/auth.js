@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-
+const cloudinary = require('../config/cloudinary')
 const User = require('../models/user')
 
 // const signToken = (req, res) => {
@@ -22,6 +22,27 @@ const User = require('../models/user')
 //     res.json({ decoded })
 // }
 
+const uploadImage = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: 'yapp-profile-pics',
+        resource_type: 'image',
+      },
+      (error, result) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(result)
+        }
+      }
+    )
+
+    uploadStream.end(fileBuffer)
+  })
+}
+
+
 const signUp = async (req, res) => {
     try {
         // check if user in database already
@@ -36,10 +57,14 @@ const signUp = async (req, res) => {
         // creates user
         const hashedPassword = bcrypt.hashSync(req.body.password, 10)
 
+        const uploadedImage = await uploadImage(req.file.buffer)
+
         const userData = {
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
+            bio: req.body.bio,
+            profilePic: uploadedImage.secure_url,
         }
 
         const user = await User.create(userData)
