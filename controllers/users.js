@@ -17,7 +17,25 @@ const show = async (req, res ) => {
     }
 }
 
+const update = async (req, res) => {
+    try {
+        if (req.params.userId !== req.user._id) {
+            return res.status(403).json({ err: 'Unauthorized.'})
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.userId,
+            {bio: req.body.bio, profilePic: req.body.profilePic}, {new: true}
+        )
+
+        res.json(updatedUser)
+    } catch (err) {
+        res.status(400).json({err: err.message})
+    }
+}
+
 module.exports = {
     index,
     show,
+    update,
 }
