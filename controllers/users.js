@@ -1,4 +1,25 @@
 const User = require('../models/user')
+const cloudinary = require('../config/cloudinary')
+
+const uploadImage = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: 'yapp-profile-pics',
+        resource_type: 'image',
+      },
+      (error, result) => {
+        if (error) {
+          reject(error)
+        } else {
+          resolve(result)
+        }
+      }
+    )
+
+    uploadStream.end(fileBuffer)
+  })
+}
 
 const index = async (req, res) => {
    const users = await User.find()
@@ -23,9 +44,16 @@ const update = async (req, res) => {
             return res.status(403).json({ err: 'Unauthorized.'})
         }
 
+        const updateData = {bio: req.body.bio}
+        if (req.file) {
+            const uploadedImage = await uploadImage(req.file.buffer)
+            updateData.profilePic = uploadedImage.secure_url
+        }
+
         const updatedUser = await User.findByIdAndUpdate(
             req.params.userId,
-            {bio: req.body.bio, profilePic: req.body.profilePic}, {new: true}
+            updateData,
+            {new: true}
         )
 
         res.json(updatedUser)
