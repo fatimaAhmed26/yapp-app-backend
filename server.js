@@ -19,6 +19,7 @@ const usersCtrl = require('./controllers/users')
 
 const verifyToken = require('./middleware/verify-token')
 
+const postCrtl = require('./controllers/post')
 mongoose.connect(process.env.MONGODB_URI)
 
 mongoose.connection.on('connected', () => {
@@ -35,6 +36,8 @@ app.get('/users', verifyToken, usersCtrl.index)
 app.get('/users/:userId', verifyToken, usersCtrl.show)
 app.put('/users/:userId', verifyToken, upload.single('profilePic'), usersCtrl.update)
 app.put('/users/:userId/follow', verifyToken, usersCtrl.followToggle)
+
+app.post('/post', postCrtl.create)
 
 app.listen(PORT, () => {
   console.log(`The express app is ready on port ${PORT}! 😀`)
