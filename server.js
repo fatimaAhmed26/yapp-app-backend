@@ -29,9 +29,6 @@ app.use(cors())
 app.use(express.json())
 app.use(morgan('dev'))
 
-// Routes go here
-// app.get('/auth/sign-token', authCtrl.signToken)
-// app.get('/auth/verify-token', authCtrl.verifyToken)
 app.post('/auth/sign-up', upload.single('profilePic'), authCtrl.signUp)
 app.post('/auth/sign-in', authCtrl.signIn)
 app.get('/users', verifyToken, usersCtrl.index)
