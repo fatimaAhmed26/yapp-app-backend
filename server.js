@@ -36,7 +36,7 @@ app.post('/auth/sign-up', upload.single('profilePic'), authCtrl.signUp)
 app.post('/auth/sign-in', authCtrl.signIn)
 app.get('/users', verifyToken, usersCtrl.index)
 app.get('/users/:userId', verifyToken, usersCtrl.show)
-app.put('/users/:userId', verifyToken, usersCtrl.update)
+app.put('/users/:userId', verifyToken, upload.single('profilePic'), usersCtrl.update)
 app.put('/users/:userId/follow', verifyToken, usersCtrl.followToggle)
 
 app.listen(PORT, () => {
