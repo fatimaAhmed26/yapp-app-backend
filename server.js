@@ -37,8 +37,11 @@ app.get('/users/:userId', verifyToken, usersCtrl.show)
 app.put('/users/:userId', verifyToken, upload.single('profilePic'), usersCtrl.update)
 app.put('/users/:userId/follow', verifyToken, usersCtrl.followToggle)
 
-app.post('/post', verifyToken, postCtrl.create)
+app.post('/posts', verifyToken, postCtrl.create)
 app.get('/posts', verifyToken,postCtrl.index)
+app.get('/posts/:postId' , verifyToken, postCtrl.show)
+app.put('/posts/:postId', verifyToken, postCtrl.update)
+app.delete('/posts/:postId', verifyToken, postCtrl.deletePost)
 
 app.listen(PORT, () => {
   console.log(`The express app is ready on port ${PORT}! 😀`)
