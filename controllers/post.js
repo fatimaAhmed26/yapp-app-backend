@@ -1,6 +1,6 @@
 const cloudinary = require('../config/cloudinary');
 const Post = require('../models/post');
-const Redbull = require('../models/post')
+
 const uploadMedia = (fileBuffer, resourceType) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
@@ -21,7 +21,6 @@ const uploadMedia = (fileBuffer, resourceType) => {
   });
 };
 
-module.exports = uploadMedia;
 const create = async (req, res) => {
   try {
     let postData = {}
@@ -53,7 +52,7 @@ const create = async (req, res) => {
 const index = async (req, res) => {
     try {
         
-        const posts = await Post.find().populate('owner')
+        const posts = await Post.find().populate("owner")
         res.status(200).json(posts)
     } catch (error) {
          res.status(500).json({ err: err.message })
@@ -62,14 +61,35 @@ const index = async (req, res) => {
 
 const show = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.postId).populate('owner')
-    res.status(200).json(hoot)
-  } catch (error) {
-    res.status(500).json({ error: error.message })
+    const post = await Post.findById(req.params.hootId).populate('author')
+    res.status(200).json(post)
+  } catch (err) {
+    res.status(500).json({ err: err.message })
+  }
+}
+const update = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId)
+
+    if (!post.owner.equals(req.user._id)) {
+      return res.status(403).send("You're not allowed to do that!")
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.postId,
+      req.body,
+      { new: true }
+    )
+
+    res.status(202).json(updatedPost)
+  } catch (err) {
+    res.status(500).json({ err: err.message })
   }
 }
 module.exports = {
     create,
     index,
     show,
+    update,
+
 }
