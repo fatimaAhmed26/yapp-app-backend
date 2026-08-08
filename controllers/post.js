@@ -1,11 +1,12 @@
-const cloudinary = require('../config/cloudinary')
+const cloudinary = require('../config/cloudinary');
+const Post = require('../models/post');
 const Redbull = require('../models/post')
 const uploadMedia = (fileBuffer, resourceType) => {
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder: "yapp-posts",
-        resource_type: resourceType,
+        resource_type: 'auto',
       },
       (error, result) => {
         if (error) {
@@ -45,6 +46,12 @@ const create=async()=>{
     
     await Post.create(postData);
 }
+const index = async (req, res) => {
+   const posts = await Post.find().populate(owner)
+   res.json(posts)
+}
+
 module.exports = {
     create,
+    index,
 }
