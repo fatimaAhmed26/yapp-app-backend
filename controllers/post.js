@@ -53,14 +53,23 @@ const create = async (req, res) => {
 const index = async (req, res) => {
     try {
         
-        const posts = await Post.find().populate(owner)
+        const posts = await Post.find().populate('owner')
         res.status(200).json(posts)
     } catch (error) {
          res.status(500).json({ err: err.message })
     }
 }
 
+const show = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId).populate('owner')
+    res.status(200).json(hoot)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+}
 module.exports = {
     create,
     index,
+    show,
 }
