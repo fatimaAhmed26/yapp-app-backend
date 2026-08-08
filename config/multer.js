@@ -19,7 +19,7 @@ const upload = multer({
   },
 
   fileFilter: (req, file, callback) => {
-   if (allowedTypes.includes(file.mimetype)) {
+   if (allowedImageTypes.includes(file.mimetype)) {
   callback(null, true);
 } else {
   callback(
