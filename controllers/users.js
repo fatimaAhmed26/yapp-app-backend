@@ -29,6 +29,8 @@ const index = async (req, res) => {
 const show = async (req, res ) => {
     try {
         const user = await User.findById(req.params.userId)
+        .populate('followers', 'username profilePic')
+        .populate('following', 'username profilePic')
         if (!user) {
             return res.status(404).json({err: 'User not found.'})
         }
