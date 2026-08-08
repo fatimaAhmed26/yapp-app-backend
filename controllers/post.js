@@ -22,33 +22,42 @@ const uploadMedia = (fileBuffer, resourceType) => {
 };
 
 module.exports = uploadMedia;
-const create=async()=>{
+const create = async (req, res) => {
+  try {
+    let postData = {}
 
-    let postData = {};
-    
-    postData.owner = req.session.user._id;
-    postData.media = {};
-    
+    postData.owner = req.session.user._id
+    postData.media = {}
+
     if (req.body.text) {
-        postData.media.type = "text";
-        postData.media.text = req.body.text;
+      postData.media.type = "text"
+      postData.media.text = req.body.text
     } else if (req.file) {
-        const mediaType = req.file.mimetype.startsWith("video/")
+      const mediaType = req.file.mimetype.startsWith("video/")
         ? "video"
-        : "image";
-        
-        const result = await uploadMedia(req.file.buffer, mediaType);
-        
-        postData.media.type = mediaType;
-        postData.media.url = result.secure_url;
-        postData.media.publicId = result.public_id;
+        : "image"
+
+      const result = await uploadMedia(req.file.buffer, mediaType)
+
+      postData.media.type = mediaType
+      postData.media.url = result.secure_url
+      postData.media.publicId = result.public_id
     }
-    
-    await Post.create(postData);
+
+    const post = await Post.create(postData)
+    res.status(201).json(post)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
 }
 const index = async (req, res) => {
-   const posts = await Post.find().populate(owner)
-   res.json(posts)
+    try {
+        
+        const posts = await Post.find().populate(owner)
+        res.status(200).json(posts)
+    } catch (error) {
+         res.status(500).json({ err: err.message })
+    }
 }
 
 module.exports = {
