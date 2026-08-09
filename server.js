@@ -42,6 +42,8 @@ app.get('/posts', verifyToken,postCtrl.index)
 app.get('/posts/:postId' , verifyToken, postCtrl.show)
 app.put('/posts/:postId', verifyToken, postCtrl.update)
 app.delete('/posts/:postId', verifyToken, postCtrl.deletePost)
+app.post('posts/:postId/liked/:userId', verifyToken, postCtrl.like)
+app.delete('posts/:postId/liked/:userId', verifyToken, postCtrl.unLike)
 
 app.listen(PORT, () => {
   console.log(`The express app is ready on port ${PORT}! 😀`)
