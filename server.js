@@ -36,6 +36,7 @@ app.get('/users', verifyToken, usersCtrl.index)
 app.get('/users/:userId', verifyToken, usersCtrl.show)
 app.put('/users/:userId', verifyToken, upload.single('profilePic'), usersCtrl.update)
 app.put('/users/:userId/follow', verifyToken, usersCtrl.followToggle)
+app.delete('/users/:userId', verifyToken, usersCtrl.deleteUser)
 
 app.post('/posts', verifyToken, postCtrl.create)
 app.get('/posts', verifyToken,postCtrl.index)

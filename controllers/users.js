@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Post = require('../models/post')
 const cloudinary = require('../config/cloudinary')
 
 const uploadImage = (fileBuffer) => {
@@ -96,9 +97,27 @@ const followToggle = async (req, res) => {
     }
 }
 
+const deleteUser = async (req, res) => {
+    try {
+         if (req.params.userId !== req.user._id) {
+            return res.status(403).json({ err: 'Unauthorized.'})
+        }
+        // const iFollow = await User.find({'followers': req.params.userId})
+
+        // const followsMe = await User.find({'following': req.params.userId})
+
+        // const myPosts = await Post.find({'owner': req.params.userId })
+        const deletedUser = await User.findByIdAndDelete(req.params.userId)
+        res.status(200).json(deletedUser)
+    } catch (err) {
+        res.status(400).json({err: err.message})
+    }
+}
+
 module.exports = {
     index,
     show,
     update,
     followToggle,
+    deleteUser,
 }
