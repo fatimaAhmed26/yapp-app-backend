@@ -46,7 +46,7 @@ const update = async (req, res) => {
             return res.status(403).json({ err: 'Unauthorized.'})
         }
 
-        const updateData = {bio: req.body.bio}
+        const updateData = {bio: req.body.bio, username: req.body.username}
         if (req.file) {
             const uploadedImage = await uploadImage(req.file.buffer)
             updateData.profilePic = uploadedImage.secure_url
