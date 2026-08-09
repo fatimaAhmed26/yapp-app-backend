@@ -23,35 +23,21 @@ const uploadMedia = (fileBuffer, resourceType) => {
 
 const create = async (req, res) => {
   try {
-    const ownerId = req.user._id
-
-    let media = {}
-
-    if (req.body.text) {
-      media.type = "text"
-      media.text = req.body.text
-    } else if (req.file) {
-      let mediaType = "image"
-      if (req.file.mimetype.startsWith("video/")) {
-        mediaType = "video"
-      }
-
       const result = await uploadMedia(req.file.buffer, mediaType)
 
       media.type = mediaType
       media.url = result.secure_url
       media.publicId = result.public_id
-    }
-
-    const newPostData = {
-      owner: ownerId,
-      media: media,
-    }
-
-    const post = await (await Post.create(newPostData)).populate('owner')
-
-    res.status(201).json(post)
-  } catch (err) {
+      
+      const newPostData = {
+          owner: ownerId,
+          media: media,
+        }
+        
+        const post = await (await Post.create(newPostData)).populate('owner')
+        
+        res.status(201).json(post)
+    } catch (err) {
     res.status(500).json({ err: err.message })
   }
 }
