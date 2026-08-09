@@ -40,7 +40,7 @@ const signUp = async (req, res) => {
 
         if (req.file) {
             const uploadedImage = await uploadImage(req.file.buffer)
-            profilePicUrl = uploadImage.secure_url
+            profilePicUrl = uploadedImage.secure_url
         }
         
         const userData = {
