@@ -26,15 +26,8 @@ const create = async (req, res) => {
     const ownerId = req.user._id
 
     let media = {}
-
-    if (req.body.text) {
-      media.type = "text"
-      media.text = req.body.text
-    } else if (req.file) {
-      let mediaType = "image"
-      if (req.file.mimetype.startsWith("video/")) {
-        mediaType = "video"
-      }
+    if (req.file) {
+      const mediaType = req.file.mimetype.split("/")[0] 
 
       const result = await uploadMedia(req.file.buffer, mediaType)
 
@@ -46,6 +39,7 @@ const create = async (req, res) => {
     const newPostData = {
       owner: ownerId,
       media: media,
+      text: req.body.text,
     }
 
     const post = await (await Post.create(newPostData)).populate('owner')
@@ -55,10 +49,11 @@ const create = async (req, res) => {
     res.status(500).json({ err: err.message })
   }
 }
-
 const index = async (req, res) => {
   try {
     const posts = await Post.find().populate("owner")
+    console.log(posts,"posts");
+    
     res.status(200).json(posts)
   } catch (error) {
     res.status(500).json({ err: error.message })
