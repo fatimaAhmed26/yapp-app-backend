@@ -21,24 +21,32 @@ const uploadMedia = (fileBuffer, resourceType) => {
   });
 };
 const create = async (req, res) => {
-    console.log(req.file)
+  console.log(req.file)
   try {
+    const ownerId = req.user._id
+
+    let media = {}
+
+    if (req.file) {
+      const mediaType = req.file.mimetype.split("/")[0]
       const result = await uploadMedia(req.file.buffer, mediaType)
 
       media.type = mediaType
       media.url = result.secure_url
       media.publicId = result.public_id
-      
-      const newPostData = {
-          owner: ownerId,
-          media: media,
-        }
-        
-        const post = await (await Post.create(newPostData)).populate('owner')
-        
-        res.status(201).json(post)
-    } catch (err) {
-        console.log(err)
+    }
+
+    const newPostData = {
+      owner: ownerId,
+      media: media,
+      text: req.body.text,
+    }
+
+    const post = await (await Post.create(newPostData)).populate('owner')
+
+    res.status(201).json(post)
+  } catch (err) {
+    console.log(err)
     res.status(500).json({ err: err.message })
   }
 }
