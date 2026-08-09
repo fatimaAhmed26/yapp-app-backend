@@ -20,7 +20,6 @@ const uploadMedia = (fileBuffer, resourceType) => {
     uploadStream.end(fileBuffer);
   });
 };
-
 const create = async (req, res) => {
     console.log(req.file)
   try {
@@ -47,6 +46,8 @@ const create = async (req, res) => {
 const index = async (req, res) => {
   try {
     const posts = await Post.find().populate("owner")
+    console.log(posts,"posts");
+    
     res.status(200).json(posts)
   } catch (error) {
     res.status(500).json({ err: error.message })

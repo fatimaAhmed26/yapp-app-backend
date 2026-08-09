@@ -16,6 +16,7 @@ const PORT = process.env.PORT ? process.env.PORT : "3000"
 
 const authCtrl = require('./controllers/auth')
 const usersCtrl = require('./controllers/users')
+const commentsCtrl = require('./controllers/comments')
 
 const verifyToken = require('./middleware/verify-token')
 
@@ -38,7 +39,7 @@ app.put('/users/:userId', verifyToken, upload.single('profilePic'), usersCtrl.up
 app.put('/users/:userId/follow', verifyToken, usersCtrl.followToggle)
 app.delete('/users/:userId', verifyToken, usersCtrl.deleteUser)
 
-app.post('/posts', verifyToken, postCtrl.create)
+app.post('/posts', verifyToken,upload.single('media'),postCtrl.create)
 app.get('/posts', verifyToken,postCtrl.index)
 app.get('/posts/:postId' , verifyToken, postCtrl.show)
 app.put('/posts/:postId', verifyToken, postCtrl.update)
@@ -46,6 +47,8 @@ app.delete('/posts/:postId', verifyToken, postCtrl.deletePost)
 app.post('posts/:postId/liked/:userId', verifyToken, postCtrl.like)
 app.delete('posts/:postId/liked/:userId', verifyToken, postCtrl.unLike)
 
+app.post('posts/:postId/comments', verifyToken, commentsCtrl.create)
+app.delete('posts/:postId/comments/:commentId', verifyToken, commentsCtrl.deleteComment)
 app.listen(PORT, () => {
   console.log(`The express app is ready on port ${PORT}! 😀`)
 })
