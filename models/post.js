@@ -26,8 +26,6 @@ const postSchema = new mongoose.Schema(
     media: {
         type:{
             type:String,
-            enum:['video','image','text'],
-            required:true,
         },
       url: {
         type: String,
@@ -37,11 +35,11 @@ const postSchema = new mongoose.Schema(
         type: String,
         default:null
       },
+      },
       text:{
         type:String,
         default:null
       },
-    },
     likes:[{
         type: mongoose.Schema.Types.ObjectId,
         ref:'User',
