@@ -122,11 +122,35 @@ const deletePost = async (req, res) => {
     res.status(500).json({ err: err.message })
   }
 }
-
+const like= async(req,res)=>{
+    try {
+       const like= await Post.findByIdAndUpdate(req.params.id,{
+        $push:{ likes: req.params.userId}
+    })
+    res.status(200).json(like)
+    } catch (err) {
+    res.status(500).json({ err: err.message })
+  }
+    
+   }
+   const unLike = async (req, res) => {
+   try {
+    
+   const unLike= await Post.findByIdAndUpdate(req.params.id, {
+        $pull:{ likes: req.params.userId }
+    })
+ res.status(200).json(unLike)
+} catch (err) {
+    res.status(500).json({ err: err.message })
+}
+}
 module.exports = {
   create,
   index,
   show,
   update,
-  deletePost
+  deletePost,
+  like,
+  unLike,
+
 }
