@@ -20,35 +20,28 @@ const uploadMedia = (fileBuffer, resourceType) => {
     uploadStream.end(fileBuffer);
   });
 };
-
 const create = async (req, res) => {
   try {
-    const ownerId = req.user._id
+    
+        let mediaUrl = ''
 
-    let media = {}
-    if (req.file) {
-      const mediaType = req.file.mimetype.split("/")[0] 
+        if (req.file) {
+            const uploadedImage = await uploadImage(req.file.buffer)
+            media = uploadImage.secure_url
+        }
+        
+        const postData = {
+            text:req.body.text,
+            media: mediaUrl,
+        }
 
-      const result = await uploadMedia(req.file.buffer, mediaType)
-
-      media.type = mediaType
-      media.url = result.secure_url
-      media.publicId = result.public_id
-    }
-
-    const newPostData = {
-      owner: ownerId,
-      media: media,
-      text: req.body.text,
-    }
-
-    const post = await (await Post.create(newPostData)).populate('owner')
-
+        const post = await Post.create(postData)
     res.status(201).json(post)
   } catch (err) {
     res.status(500).json({ err: err.message })
   }
 }
+
 const index = async (req, res) => {
   try {
     const posts = await Post.find().populate("owner")

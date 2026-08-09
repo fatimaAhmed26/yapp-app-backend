@@ -39,7 +39,7 @@ app.put('/users/:userId', verifyToken, upload.single('profilePic'), usersCtrl.up
 app.put('/users/:userId/follow', verifyToken, usersCtrl.followToggle)
 app.delete('/users/:userId', verifyToken, usersCtrl.deleteUser)
 
-app.post('/posts', verifyToken, postCtrl.create)
+app.post('/posts', verifyToken,upload.single('media'),postCtrl.create)
 app.get('/posts', verifyToken,postCtrl.index)
 app.get('/posts/:postId' , verifyToken, postCtrl.show)
 app.put('/posts/:postId', verifyToken, postCtrl.update)
