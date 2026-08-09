@@ -19,27 +19,6 @@ try {
 }
 }
 
-const update = async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.postId)
-         if (!post){
-        return res.status(400).json({ err: 'Post not found.' })
-    }
-        const comment = post.comment.id(req.params.commentId)
-        if (!comment){
-            return res.status(400).json({err: 'Comment not found'})
-        }
-
-        if (comment.author.toString() !== req.user._id) {
-        return res.status(403) .json({ message: "You are not authorized to edit this comment" })}
-
-        comment.text = req.body.text
-        await post.save()
-        res.status(200).json({ message: "Comment updated successfully" })
-    } catch (err) {
-        res.status(500).json({ err: err.message })
-    }
-}
 
 const deleteComment = async (req, res) => {
     try {
@@ -66,7 +45,6 @@ const deleteComment = async (req, res) => {
 
 module.exports = {
     create,
-    update,
     deleteComment,
 
 }
