@@ -16,6 +16,7 @@ const PORT = process.env.PORT ? process.env.PORT : "3000"
 
 const authCtrl = require('./controllers/auth')
 const usersCtrl = require('./controllers/users')
+const commentsCtrl = require('./controllers/comments')
 
 const verifyToken = require('./middleware/verify-token')
 
@@ -46,6 +47,9 @@ app.delete('/posts/:postId', verifyToken, postCtrl.deletePost)
 app.post('posts/:postId/liked/:userId', verifyToken, postCtrl.like)
 app.delete('posts/:postId/liked/:userId', verifyToken, postCtrl.unLike)
 
+app.post('posts/:postId/comments', verifyToken, commentsCtrl.create)
+app.put('posts/:postId/comments/:commentId', verifyToken, commentsCtrl.update)
+app.delete('posts/:postId/comments/:commentId', verifyToken, commentsCtrl.deleteComment)
 app.listen(PORT, () => {
   console.log(`The express app is ready on port ${PORT}! 😀`)
 })
