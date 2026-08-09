@@ -22,6 +22,7 @@ const uploadMedia = (fileBuffer, resourceType) => {
 };
 
 const create = async (req, res) => {
+    console.log(req.file)
   try {
       const result = await uploadMedia(req.file.buffer, mediaType)
 
@@ -38,6 +39,7 @@ const create = async (req, res) => {
         
         res.status(201).json(post)
     } catch (err) {
+        console.log(err)
     res.status(500).json({ err: err.message })
   }
 }
