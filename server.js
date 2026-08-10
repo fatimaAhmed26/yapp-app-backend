@@ -47,8 +47,8 @@ app.delete('/posts/:postId', verifyToken, postCtrl.deletePost)
 app.put('/posts/:postId/liked', verifyToken, postCtrl.likeToggle)
 
 
-app.post('posts/:postId/comments', verifyToken, commentsCtrl.create)
-app.delete('posts/:postId/comments/:commentId', verifyToken, commentsCtrl.deleteComment)
+app.post('/posts/:postId/comments', verifyToken, commentsCtrl.create)
+app.delete('/posts/:postId/comments/:commentId', verifyToken, commentsCtrl.deleteComment)
 app.listen(PORT, () => {
   console.log(`The express app is ready on port ${PORT}! 😀`)
 })
