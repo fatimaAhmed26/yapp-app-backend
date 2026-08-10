@@ -11,7 +11,9 @@ try {
     post.comment.push(req.body)
     await post.save()
 
-        const newComment = post.comment[post.comment.length - 1 ]
+    await post.populate('comment.author') 
+
+    const newComment = post.comment[post.comment.length - 1 ]
 
         res.status(201).json(newComment)
 } catch (err) {

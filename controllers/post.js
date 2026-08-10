@@ -53,7 +53,7 @@ const create = async (req, res) => {
 
 const index = async (req, res) => {
   try {
-    const posts = await Post.find().populate("owner")
+    const posts = await Post.find().populate("owner").populate('comment.author')
     
     res.status(200).json(posts)
   } catch (error) {
@@ -63,7 +63,7 @@ const index = async (req, res) => {
 
 const show = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.postId).populate('owner')
+    const post = await Post.findById(req.params.postId).populate('owner').populate('comment.author')
 
     if (!post) {
       return res.status(404).json({ err: 'Post not found' })
