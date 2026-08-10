@@ -44,7 +44,7 @@ app.get('/posts', verifyToken,postCtrl.index)
 app.get('/posts/:postId' , verifyToken, postCtrl.show)
 app.put('/posts/:postId', verifyToken, postCtrl.update)
 app.delete('/posts/:postId', verifyToken, postCtrl.deletePost)
-app.put('posts/:postId/liked', verifyToken, postCtrl.likeToggle)
+app.put('/posts/:postId/liked', verifyToken, postCtrl.likeToggle)
 
 
 app.post('posts/:postId/comments', verifyToken, commentsCtrl.create)
