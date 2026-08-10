@@ -119,35 +119,45 @@ const deletePost = async (req, res) => {
     res.status(500).json({ err: err.message })
   }
 }
-const like= async(req,res)=>{
+
+const likeToggle = async (req, res) => {
     try {
-       const like= await Post.findByIdAndUpdate(req.params.id,{
-        $push:{ likes: req.params.userId}
-    })
-    res.status(200).json(like)
+        const currentPost = await Post.findById(req.post._id)
+        const targetPost = await Post.findById(req.params.postId)
+
+        if (!targetPost) {
+            return res.status(404).json({err: 'post not found.'})
+        }
+        if (req.params.postId === req.post._id) {
+            return res.status(400).json({err: 'You cant like your post.'})
+        }
+
+        const isLiked = currentPost.likes.includes(req.params.postId)
+
+        if (isLiked) {
+            currentPost.likes.pull(req.params.postId)
+            targetPost.likes.pull(req.post._id)
+        } else {
+            currentPost.likes.push(req.params.postId)
+            targetPost.likes.push(req.post._id)
+        }
+
+        await currentPost.save()
+        await targetPost.save()
+
+        res.json(currentPost)
+        
     } catch (err) {
-    res.status(500).json({ err: err.message })
-  }
-    
-   }
-   const unLike = async (req, res) => {
-   try {
-    
-   const unLike= await Post.findByIdAndUpdate(req.params.id, {
-        $pull:{ likes: req.params.userId }
-    })
- res.status(200).json(unLike)
-} catch (err) {
-    res.status(500).json({ err: err.message })
+        res.status(400).json({err: err.message})
+    }
 }
-}
+
 module.exports = {
   create,
   index,
   show,
   update,
   deletePost,
-  like,
-  unLike,
+  likeToggle,
 
 }
