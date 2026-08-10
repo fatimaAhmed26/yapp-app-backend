@@ -44,8 +44,8 @@ app.get('/posts', verifyToken,postCtrl.index)
 app.get('/posts/:postId' , verifyToken, postCtrl.show)
 app.put('/posts/:postId', verifyToken, postCtrl.update)
 app.delete('/posts/:postId', verifyToken, postCtrl.deletePost)
-app.post('posts/:postId/liked/:userId', verifyToken, postCtrl.like)
-app.delete('posts/:postId/liked/:userId', verifyToken, postCtrl.unLike)
+app.post('posts/:postId/liked', verifyToken, postCtrl.likeToggle)
+
 
 app.post('posts/:postId/comments', verifyToken, commentsCtrl.create)
 app.delete('posts/:postId/comments/:commentId', verifyToken, commentsCtrl.deleteComment)
