@@ -42,7 +42,7 @@ app.delete('/users/:userId', verifyToken, usersCtrl.deleteUser)
 app.post('/posts', verifyToken,upload.single('media'),postCtrl.create)
 app.get('/posts', verifyToken,postCtrl.index)
 app.get('/posts/:postId' , verifyToken, postCtrl.show)
-app.put('/posts/:postId', verifyToken, postCtrl.update)
+app.put('/posts/:postId', verifyToken,upload.single('media'), postCtrl.update)
 app.delete('/posts/:postId', verifyToken, postCtrl.deletePost)
 app.put('/posts/:postId/liked', verifyToken, postCtrl.likeToggle)
 

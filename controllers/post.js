@@ -21,7 +21,7 @@ const uploadMedia = (fileBuffer, resourceType) => {
   });
 };
 const create = async (req, res) => {
-  console.log(req.file)
+ 
   try {
     const ownerId = req.user._id
 
@@ -46,7 +46,6 @@ const create = async (req, res) => {
 
     res.status(201).json(post)
   } catch (err) {
-    console.log(err)
     res.status(500).json({ err: err.message })
   }
 }
@@ -75,7 +74,18 @@ const show = async (req, res) => {
   }
 }
 
+
 const update = async (req, res) => {
+  let media = {}
+  if (req.file) {
+    const mediaType = req.file.mimetype.split("/")[0]
+    const result = await uploadMedia(req.file.buffer, mediaType)
+
+    media.type = mediaType
+    media.url = result.secure_url
+    media.publicId = result.public_id
+  }
+
   try {
     const post = await Post.findById(req.params.postId)
 
@@ -87,11 +97,19 @@ const update = async (req, res) => {
       return res.status(403).send("You're not allowed to do that!")
     }
 
+    const { text } = req.body
+    const updateData = { text }
+
+    if (req.file) {
+      updateData.media = media
+    }
+
     const updatedPost = await Post.findByIdAndUpdate(
       req.params.postId,
-      req.body,
-      { new: true }
+      updateData,
+      { new: true, returnDocument: 'after' }
     )
+
     updatedPost._doc.owner = req.user
 
     res.status(200).json(updatedPost)
@@ -99,6 +117,7 @@ const update = async (req, res) => {
     res.status(500).json({ err: err.message })
   }
 }
+
 
 const deletePost = async (req, res) => {
   try {
