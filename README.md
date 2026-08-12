@@ -4,6 +4,7 @@
 
 • Deployed API 
 
+https://joyful-flan-714bd6.netlify.app
 
 • Frontend Repo 
 
@@ -74,3 +75,4 @@ npm run dev
 ### Attributions
 
 • Cloudinary for media hosting.
+• Claude for the style.
