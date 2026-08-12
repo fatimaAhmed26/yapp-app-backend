@@ -154,7 +154,7 @@ const likeToggle = async (req, res) => {
         }
 
         await post.save()
-
+        await post.populate('owner')
         res.json(post)
 
     } catch (err) {
