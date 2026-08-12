@@ -1,4 +1,3 @@
-// config/multer.js
 
 const multer = require('multer')
 
