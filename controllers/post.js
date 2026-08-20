@@ -52,7 +52,7 @@ const create = async (req, res) => {
 
 const index = async (req, res) => {
   try {
-    const posts = await Post.find().populate("owner").populate('comment.author')
+    const posts = await Post.find().sort({ createdAt: -1 }).populate("owner").populate('comment.author')
     
     res.status(200).json(posts)
   } catch (error) {
