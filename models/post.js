@@ -14,6 +14,10 @@ postId:{
     type:mongoose.Schema.Types.ObjectId,
     ref:'Post'
 },
+parentComment: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: null,
+},
 
 },{ timestamps: true })
 
